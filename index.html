@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>0nesTensThousands 🎯 | Math Learning Game</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <!-- Header / Navigation -->
+  <header class="app-header">
+    <div class="header-container">
+      <div class="logo-area">
+        <span class="logo-icon">⭐</span>
+        <div>
+          <h1 class="logo-title">0nesTensThousands</h1>
+          <p class="logo-subtitle">Hundreds, Tens &amp; Ones Fun Math Practice</p>
+        </div>
+      </div>
+
+      <div class="header-controls">
+        <div class="star-pill" title="Total Stars Earned">
+          <span class="star-icon">🌟</span>
+          <span id="starCount">0</span>
+          <span class="star-label">Stars</span>
+        </div>
+        <button id="soundToggleBtn" class="icon-btn" title="Toggle Sound">
+          <span id="soundIcon">🔊</span>
+        </button>
+        <button id="helpBtn" class="icon-btn" title="How to Play">
+          <span>❓</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Level Navigation Tabs -->
+    <nav class="level-nav">
+      <button class="level-tab active" data-level="1">
+        <span class="tab-badge">Level 1</span>
+        <span class="tab-title">Hundreds, Tens &amp; Ones</span>
+        <span class="tab-sub">Q5 Worksheet</span>
+      </button>
+      <button class="level-tab" data-level="2">
+        <span class="tab-badge">Level 2</span>
+        <span class="tab-title">Match the Following</span>
+        <span class="tab-sub">Q6 Expanded Form</span>
+      </button>
+      <button class="level-tab" data-level="3">
+        <span class="tab-badge">Level 3</span>
+        <span class="tab-title">Fill the 100s Grid</span>
+        <span class="tab-sub">Q7 101 to 1000</span>
+      </button>
+    </nav>
+  </header>
+
+  <!-- Main Game Canvas Container -->
+  <main class="game-container">
+
+    <!-- ==================== LEVEL 1: HUNDREDS, TENS, ONES (Q5) ==================== -->
+    <section id="level1" class="level-view active">
+      <div class="card-header">
+        <div class="header-left">
+          <span class="level-tag">Question 5</span>
+          <h2 class="question-title">Write how many Hundreds (H), Tens (T), and Ones (O) are in each number.</h2>
+          <p class="question-desc">Look at each 3-digit number and type the digits for Hundreds, Tens, and Ones!</p>
+        </div>
+        <!-- Refresh Button prominently on Top-Right -->
+        <button id="l1RefreshBtn" class="refresh-btn" title="Generate new random 3-digit numbers">
+          <span class="refresh-icon">🔄</span>
+          <span class="refresh-text">New Numbers</span>
+        </button>
+      </div>
+
+      <!-- Optional Visual Place-Value helper toggle -->
+      <div class="toolbar">
+        <div class="toolbar-hint">
+          <span class="pill-badge pill-h">H = Hundreds</span>
+          <span class="pill-badge pill-t">T = Tens</span>
+          <span class="pill-badge pill-o">O = Ones</span>
+        </div>
+        <button id="l1ToggleBlocksBtn" class="secondary-btn small-btn">
+          🧱 <span>Show Base-10 Blocks</span>
+        </button>
+      </div>
+
+      <!-- Question Items Container -->
+      <div id="l1QuestionsContainer" class="q-list">
+        <!-- Generated dynamically via JS -->
+      </div>
+
+      <!-- Action Footer -->
+      <div class="action-footer">
+        <button id="l1CheckBtn" class="primary-btn pulse-on-ready">
+          <span>✨ Check Answers</span>
+        </button>
+        <button id="l1HintBtn" class="secondary-btn">
+          <span>💡 Place Value Tip</span>
+        </button>
+        <div id="l1FeedbackMsg" class="feedback-msg"></div>
+      </div>
+    </section>
+
+    <!-- ==================== LEVEL 2: MATCH THE FOLLOWING (Q6) ==================== -->
+    <section id="level2" class="level-view">
+      <div class="card-header">
+        <div class="header-left">
+          <span class="level-tag">Question 6</span>
+          <h2 class="question-title">Match the Following</h2>
+          <p class="question-desc">Connect each Expanded Form in <strong>Column A</strong> with its Standard Number in <strong>Column B</strong>!</p>
+        </div>
+        <!-- Refresh Button prominently on Top-Right -->
+        <button id="l2RefreshBtn" class="refresh-btn" title="Generate new random 3-digit matching pairs">
+          <span class="refresh-icon">🔄</span>
+          <span class="refresh-text">New Numbers</span>
+        </button>
+      </div>
+
+      <!-- Instructions & Mode -->
+      <div class="toolbar">
+        <div class="tip-banner">
+          👉 <strong>How to connect:</strong> Click a card in Column A, then click its matching number in Column B! Click again to disconnect.
+        </div>
+        <button id="l2ClearBtn" class="secondary-btn small-btn">
+          🧹 Clear Matches
+        </button>
+      </div>
+
+      <!-- Match Board with SVG Lines Overlay -->
+      <div class="match-board-wrapper" id="matchWrapper">
+        <svg id="matchSvgCanvas" class="match-svg"></svg>
+        
+        <div class="match-columns-container">
+          <!-- Column A -->
+          <div class="match-col col-a">
+            <div class="col-heading">
+              <span class="col-pill">Column A</span>
+              <h3>Expanded Form</h3>
+            </div>
+            <div id="colAItems" class="match-items-list">
+              <!-- Dynamically populated -->
+            </div>
+          </div>
+
+          <!-- Column B -->
+          <div class="match-col col-b">
+            <div class="col-heading">
+              <span class="col-pill">Column B</span>
+              <h3>Standard Number</h3>
+            </div>
+            <div id="colBItems" class="match-items-list">
+              <!-- Dynamically populated -->
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Action Footer -->
+      <div class="action-footer">
+        <button id="l2CheckBtn" class="primary-btn pulse-on-ready">
+          <span>✨ Check Matches</span>
+        </button>
+        <div id="l2FeedbackMsg" class="feedback-msg"></div>
+      </div>
+    </section>
+
+    <!-- ==================== LEVEL 3: 100-GRID FILL MISSING NUMBERS (Q7) ==================== -->
+    <section id="level3" class="level-view">
+      <div class="card-header">
+        <div class="header-left">
+          <span class="level-tag">Question 7</span>
+          <h2 class="question-title">Fill in the missing numbers</h2>
+          <p class="question-desc">
+            Count down the columns: fill in the blank boxes in the 100-grid from 
+            <span id="currentRangeText" class="highlight-range">501 to 600</span>!
+          </p>
+        </div>
+        <!-- Refresh Button prominently on Top-Right -->
+        <button id="l3RefreshBtn" class="refresh-btn" title="Pick a random 100s range (101-200 up to 901-1000)">
+          <span class="refresh-icon">🔄</span>
+          <span class="refresh-text">Random Range</span>
+        </button>
+      </div>
+
+      <!-- Range Selector & Settings Toolbar -->
+      <div class="grid-controls-bar">
+        <div class="range-selector-group">
+          <label for="rangeSelect"><strong>Select Range:</strong></label>
+          <select id="rangeSelect" class="styled-select">
+            <option value="101">101 to 200</option>
+            <option value="201">201 to 300</option>
+            <option value="301">301 to 400</option>
+            <option value="401">401 to 500</option>
+            <option value="501" selected>501 to 600 (As on Paper)</option>
+            <option value="601">601 to 700</option>
+            <option value="701">701 to 800</option>
+            <option value="801">801 to 900</option>
+            <option value="901">901 to 1000</option>
+          </select>
+        </div>
+
+        <div class="difficulty-group">
+          <label for="difficultySelect"><strong>Difficulty:</strong></label>
+          <select id="difficultySelect" class="styled-select">
+            <option value="worksheet" selected>Worksheet Mode (~10 clues)</option>
+            <option value="medium">Medium Practice (~40 clues)</option>
+            <option value="easy">Easy (~70 clues)</option>
+          </select>
+        </div>
+
+        <div class="grid-stats">
+          <span class="stat-badge">
+            Filled: <strong id="gridFilledCount">0</strong> / <span id="gridTotalMissing">90</span>
+          </span>
+        </div>
+      </div>
+
+      <!-- Navigation & Layout Hint -->
+      <div class="grid-helper-bar">
+        <span class="grid-helper-tip">💡 <strong>Tip:</strong> Columns count downwards like on the paper! (501 ➔ 502 ➔ 503... 510). Use arrow keys to move!</span>
+        <div class="grid-action-quick">
+          <button id="l3HintBtn" class="secondary-btn small-btn">💡 Give Hint</button>
+          <button id="l3ClearBtn" class="secondary-btn small-btn">🧹 Clear My Answers</button>
+        </div>
+      </div>
+
+      <!-- The 10x10 Grid Viewport -->
+      <div class="grid-scroll-wrapper">
+        <div id="grid100" class="number-grid-100">
+          <!-- 10x10 cells generated dynamically via JS -->
+        </div>
+      </div>
+
+      <!-- On-screen Kid-Friendly Touch Number Pad -->
+      <div class="touch-keypad-wrapper" id="keypadWrapper">
+        <div class="keypad-header">
+          <span>Active Cell: <strong id="keypadActiveCell">None</strong></span>
+          <button id="toggleKeypadBtn" class="text-btn">Hide Keypad ▾</button>
+        </div>
+        <div class="keypad-keys" id="touchKeypad">
+          <button class="key-btn" data-key="1">1</button>
+          <button class="key-btn" data-key="2">2</button>
+          <button class="key-btn" data-key="3">3</button>
+          <button class="key-btn" data-key="4">4</button>
+          <button class="key-btn" data-key="5">5</button>
+          <button class="key-btn" data-key="6">6</button>
+          <button class="key-btn" data-key="7">7</button>
+          <button class="key-btn" data-key="8">8</button>
+          <button class="key-btn" data-key="9">9</button>
+          <button class="key-btn action-key" data-key="back">⌫ Del</button>
+          <button class="key-btn" data-key="0">0</button>
+          <button class="key-btn enter-key" data-key="next">Next ➔</button>
+        </div>
+      </div>
+
+      <!-- Action Footer -->
+      <div class="action-footer">
+        <button id="l3CheckBtn" class="primary-btn pulse-on-ready">
+          <span>✨ Check My Grid</span>
+        </button>
+        <button id="l3RevealBtn" class="secondary-btn">
+          <span>👀 Reveal Solution</span>
+        </button>
+        <div id="l3FeedbackMsg" class="feedback-msg"></div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Confetti Canvas -->
+  <canvas id="confettiCanvas"></canvas>
+
+  <!-- Celebration Modal Popup -->
+  <div id="celebrationModal" class="modal-overlay">
+    <div class="modal-card">
+      <div class="modal-badge">🎉 SUPERSTAR! 🎉</div>
+      <h2 id="modalTitle">Awesome Job!</h2>
+      <p id="modalMsg">You completed this practice set perfectly!</p>
+      <div class="star-reward-display">
+        <span>⭐</span><span>⭐</span><span>⭐</span>
+      </div>
+      <div class="modal-actions">
+        <button id="modalNextBtn" class="primary-btn">Play Another Round 🔄</button>
+        <button id="modalCloseBtn" class="secondary-btn">Keep Reviewing</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Help / Info Modal -->
+  <div id="helpModal" class="modal-overlay">
+    <div class="modal-card help-card">
+      <div class="modal-badge">📖 How to Play</div>
+      <h2>Welcome to 0nesTensThousands!</h2>
+      <div class="help-content">
+        <div class="help-item">
+          <strong>🌟 Level 1 (Question 5):</strong>
+          <p>Break 3-digit numbers into Hundreds (H), Tens (T), and Ones (O). Click the <strong>🔄 New Numbers</strong> button anytime to practice as much as you like!</p>
+        </div>
+        <div class="help-item">
+          <strong>🔗 Level 2 (Question 6):</strong>
+          <p>Match Expanded Form (like 300 + 40 + 5) with Standard Number (345). Click a card in Column A, then click its partner in Column B!</p>
+        </div>
+        <div class="help-item">
+          <strong>🔢 Level 3 (Question 7):</strong>
+          <p>Complete the 100s Grid! Numbers count down columns (e.g. 501 to 510 in Column 1, 511 to 520 in Column 2). Practice ranges from 101-200 all the way to 901-1000!</p>
+        </div>
+      </div>
+      <div class="modal-actions">
+        <button id="helpCloseBtn" class="primary-btn">Got it! Let's Play 🚀</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="game.js"></script>
+</body>
+</html>
